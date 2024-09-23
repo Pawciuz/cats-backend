@@ -1,11 +1,9 @@
 package org.example.catsbackend.services
 
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.flow
-import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.flow.catch
+import kotlinx.coroutines.flow.flow
 import org.springframework.stereotype.Service
 import org.springframework.web.reactive.function.client.WebClient
 import org.springframework.web.reactive.function.client.awaitBody
@@ -16,7 +14,6 @@ class CatFactsAndUsersService(private val webClient: WebClient) {
     fun fetchCatFactsAndUsers(): Flow<CatFactWithUser> = flow {
         for(i in 1..3) {
             try {
-                // Pobieramy dane o kocich faktach
                 val catFactResponse = webClient.get()
                     .uri("https://cat-fact.herokuapp.com/facts/random")
                     .retrieve()
@@ -24,7 +21,6 @@ class CatFactsAndUsersService(private val webClient: WebClient) {
 
                 val fact = catFactResponse.text ?: catFactResponse.fact
 
-                // Pobieramy dane o losowym użytkowniku
                 val userResponse = webClient.get()
                     .uri("https://randomuser.me/api/")
                     .retrieve()
@@ -41,7 +37,6 @@ class CatFactsAndUsersService(private val webClient: WebClient) {
             }
 
 
-            // Opóźnienie przed kolejnym zapytaniem
             delay(10000)
         }
     }
@@ -50,7 +45,6 @@ class CatFactsAndUsersService(private val webClient: WebClient) {
         }
 }
 
-// Data class dla odpowiedzi API
 data class CatFactResponse(
     val text: String? = null,
     val fact: String? = null
